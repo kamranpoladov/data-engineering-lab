@@ -1,0 +1,19 @@
+{
+  "type": "commonjs",
+  "dependencies": {
+    "db-migrate": "^0.11.13",
+    "db-migrate-mysql": "^2.2.0",
+    "dotenv": "^16.0.3",
+    "mysql": "^2.18.1",
+    "prettier": "^2.7.1"
+  },
+  "name": "data-engineering-lab",
+  "version": "1.0.0",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
