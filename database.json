@@ -5,7 +5,8 @@
     "password": { "ENV": "DEV_PASSWORD" },
     "host": { "ENV": "DEV_HOST" },
     "port": { "ENV": "DEV_PORT" },
-    "database": { "ENV": "DEV_DATABASE" }
+    "database": { "ENV": "DEV_DATABASE" },
+    "multipleStatements": true
   },
   "prod": {
     "driver": "mysql",
@@ -13,6 +14,7 @@
     "password": { "ENV": "PROD_PASSWORD" },
     "host": { "ENV": "PROD_HOST" },
     "port": { "ENV": "PROD_PORT" },
-    "database": { "ENV": "PROD_DATABASE" }
+    "database": { "ENV": "PROD_DATABASE" },
+    "multipleStatements": true
   }
 }

@@ -18,7 +18,7 @@ exports.up = function (db, callback) {
   db.createTable(
     'test_table',
     {
-      id: { type: 'Int', primaryKey: true, autoIncrement: true },
+      id: { type: 'int', primaryKey: true, autoIncrement: true },
       name: 'string'
     },
     callback
