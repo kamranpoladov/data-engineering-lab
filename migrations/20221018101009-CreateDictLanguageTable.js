@@ -16,20 +16,27 @@ exports.setup = function (options, seedLink) {
 
 exports.up = function (db, cb) {
   db.createTable(
-    'title',
+    'dict_language',
     {
-      id: { type: 'string', primaryKey: true, unique: true, notNull: true },
-      primary_title: 'string',
-      original_title: 'string',
-      average_rating: 'decimal',
-      votes: 'int'
+      id: {
+        type: 'int',
+        primaryKey: true,
+        autoIncrement: true,
+        unique: true,
+        notNull: true
+      },
+      code: {
+        type: 'string',
+        unique: true,
+        notNull: true
+      }
     },
     cb
   );
 };
 
 exports.down = function (db, cb) {
-  db.dropTable('title', cb);
+  db.dropTable('dict_language', cb);
 };
 
 exports._meta = {

@@ -14,16 +14,15 @@ exports.setup = function (options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function (db, callback) {
+exports.up = function (db, cb) {
   db.runSql(
-    'INSERT INTO name (id, name, birthyear, deathyear) SELECT nconst, primaryName, birthyear, deathyear FROM nameBasics;',
-    [],
-    callback
+    'INSERT INTO dict_region (code) SELECT DISTINCT region FROM titleAkas WHERE region IS NOT NULL;',
+    cb
   );
 };
 
-exports.down = function (db, callback) {
-  db.runSql('DELETE FROM name', [], callback);
+exports.down = function (db) {
+  return null;
 };
 
 exports._meta = {

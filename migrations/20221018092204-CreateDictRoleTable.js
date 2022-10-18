@@ -14,16 +14,25 @@ exports.setup = function (options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function (db, callback) {
-  db.runSql(
-    'INSERT INTO name (id, name, birthyear, deathyear) SELECT nconst, primaryName, birthyear, deathyear FROM nameBasics;',
-    [],
-    callback
+exports.up = function (db, cb) {
+  db.createTable(
+    'dict_role',
+    {
+      id: {
+        type: 'int',
+        primaryKey: true,
+        autoIncrement: true,
+        unique: true,
+        notNull: true
+      },
+      name: 'string'
+    },
+    cb
   );
 };
 
-exports.down = function (db, callback) {
-  db.runSql('DELETE FROM name', [], callback);
+exports.down = function (db, cb) {
+  db.dropTable('dict_role', cb);
 };
 
 exports._meta = {
