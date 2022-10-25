@@ -14,12 +14,20 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function(db) {
-  return null;
+exports.up = function(db, cb) {
+  db.runSql(
+    `
+    CREATE TABLE dict_profession (
+      id int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+      profession varchar(255) NOT NULL
+    );
+  `,
+    cb
+  );
 };
 
-exports.down = function(db) {
-  return null;
+exports.down = function(db, cb) {
+  db.dropTable('dict_profession', cb);
 };
 
 exports._meta = {
