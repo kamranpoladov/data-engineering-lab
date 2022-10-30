@@ -17,12 +17,12 @@ exports.setup = function (options, seedLink) {
 exports.up = function (db, cb) {
   db.runSql(
     `
-  CREATE TABLE title_x_language (
+  CREATE TABLE title_x_genre (
     title_id INT NOT NULL,
-    language_id INT NOT NULL,
-    PRIMARY KEY (title_id, language_id),
+    genre_id INT NOT NULL,
+    PRIMARY KEY (title_id, genre_id),
     FOREIGN KEY (title_id) REFERENCES title(id),
-    FOREIGN KEY (language_id) REFERENCES dict_language(id)
+    FOREIGN KEY (genre_id) REFERENCES dict_genre(id)
   );
   `,
     cb
@@ -30,7 +30,7 @@ exports.up = function (db, cb) {
 };
 
 exports.down = function (db, cb) {
-  db.dropTable('title_x_language', cb);
+  db.dropTable('title_x_genre', cb);
 };
 
 exports._meta = {

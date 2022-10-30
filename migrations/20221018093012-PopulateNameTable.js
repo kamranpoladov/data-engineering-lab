@@ -16,14 +16,13 @@ exports.setup = function (options, seedLink) {
 
 exports.up = function (db, callback) {
   db.runSql(
-    'INSERT INTO name (id, name, birthyear, deathyear) SELECT nconst, primaryName, birthyear, deathyear FROM nameBasics;',
-    [],
+    'INSERT INTO name (id, name, birth_year, death_year) SELECT nconst, primaryName, birthyear, deathyear FROM nameBasics;',
     callback
   );
 };
 
 exports.down = function (db, callback) {
-  db.runSql('DELETE FROM name', [], callback);
+  return null;
 };
 
 exports._meta = {

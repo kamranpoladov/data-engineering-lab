@@ -17,20 +17,17 @@ exports.setup = function (options, seedLink) {
 exports.up = function (db, cb) {
   db.runSql(
     `
-  CREATE TABLE title_x_language (
-    title_id INT NOT NULL,
-    language_id INT NOT NULL,
-    PRIMARY KEY (title_id, language_id),
-    FOREIGN KEY (title_id) REFERENCES title(id),
-    FOREIGN KEY (language_id) REFERENCES dict_language(id)
-  );
+    DELETE FROM titleAkas WHERE titleAkas.titleId NOT IN (SELECT tconst FROM titleBasics);
+    INSERT INTO title_x_region (title_id, region_id)
+    SELECT DISTINCT titleAkas.titleId as title_id, dict_region.id as region_id FROM titleAkas
+    INNER JOIN dict_region ON titleAkas.region = dict_region.code;
   `,
     cb
   );
 };
 
-exports.down = function (db, cb) {
-  db.dropTable('title_x_language', cb);
+exports.down = function (db) {
+  return null;
 };
 
 exports._meta = {

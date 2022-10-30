@@ -18,7 +18,7 @@ exports.up = function (db, cb) {
   db.runSql(
     `
     CREATE TABLE title_x_region (
-      title_id VARCHAR(255) NOT NULL,
+      title_id INT NOT NULL,
       region_id INT NOT NULL,
       PRIMARY KEY (title_id, region_id),
       FOREIGN KEY (title_id) REFERENCES title(id),

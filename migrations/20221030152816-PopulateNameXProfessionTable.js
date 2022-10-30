@@ -17,20 +17,16 @@ exports.setup = function (options, seedLink) {
 exports.up = function (db, cb) {
   db.runSql(
     `
-  CREATE TABLE title_x_language (
-    title_id INT NOT NULL,
-    language_id INT NOT NULL,
-    PRIMARY KEY (title_id, language_id),
-    FOREIGN KEY (title_id) REFERENCES title(id),
-    FOREIGN KEY (language_id) REFERENCES dict_language(id)
-  );
+    INSERT INTO name_x_profession (name_id, profession_id)
+    SELECT DISTINCT nameBasics.nconst as name_id, dict_profession.id as profession_id FROM nameBasics
+    INNER JOIN dict_profession ON find_in_set(dict_profession.profession, nameBasics.primaryProfession);
   `,
     cb
   );
 };
 
-exports.down = function (db, cb) {
-  db.dropTable('title_x_language', cb);
+exports.down = function (db) {
+  return null;
 };
 
 exports._meta = {

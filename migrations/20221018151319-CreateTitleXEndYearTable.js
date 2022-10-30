@@ -18,8 +18,8 @@ exports.up = function (db, cb) {
   db.runSql(
     `
     CREATE TABLE title_x_end_year (
-      title_id varchar(255) NOT NULL,
-      end_year int,
+      title_id INT NOT NULL,
+      end_year INT,
       PRIMARY KEY (title_id),
       FOREIGN KEY (title_id) REFERENCES title(id)
     );

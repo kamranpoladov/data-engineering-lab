@@ -18,7 +18,13 @@ exports.up = function (db, cb) {
   db.createTable(
     'title',
     {
-      id: { type: 'string', primaryKey: true, unique: true, notNull: true },
+      id: {
+        type: 'int',
+        primaryKey: true,
+        autoIncrement: true,
+        unique: true,
+        notNull: true
+      },
       primary_title: 'string',
       original_title: 'string',
       average_rating: 'decimal',
