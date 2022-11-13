@@ -76,6 +76,11 @@ Database connection is defined in `database.json` file for both development and 
 }
 ```
 
+## Final Schema
+
+![image](https://user-images.githubusercontent.com/42556944/201544913-9f67e2a4-2409-4d7f-9c38-6d47980f1918.png)
+
+
 ## Database changes
 
 #### Removing prefixes from id's
@@ -279,4 +284,98 @@ VIEW `name_summary` AS
 ```
 
 ![image](https://user-images.githubusercontent.com/42556944/201539076-9669bdaf-4ded-4c46-b396-e17c3463a9ce.png)
+
+## Trigger 
+
+We added a trigger to capitalize `name`.`name` when on `BEFORE INSERT`
+
+We have created the following function to capitalize first letter in each word of a string (credit to this [answer](https://stackoverflow.com/a/50631710/8478087))
+
+```
+CREATE DEFINER=`root`@`localhost` FUNCTION `capitalize`(s varchar(255)) RETURNS varchar(255) CHARSET utf8mb4
+BEGIN
+  declare c int;
+  declare x varchar(255);
+  declare y varchar(255);
+  declare z varchar(255);
+
+  set x = UPPER( SUBSTRING( s, 1, 1));
+  set y = SUBSTR( s, 2);
+  set c = instr( y, ' ');
+
+  while c > 0
+    do
+      set z = SUBSTR( y, 1, c);
+      set x = CONCAT( x, z);
+      set z = UPPER( SUBSTR( y, c+1, 1));
+      set x = CONCAT( x, z);
+      set y = SUBSTR( y, c+2);
+      set c = INSTR( y, ' ');     
+  end while;
+  set x = CONCAT(x, y);
+  return x;
+END
+```
+
+Then, we created the following `BEFORE INSERT` trigger on `name` table
+
+```
+CREATE DEFINER=`root`@`localhost` TRIGGER `name_BEFORE_INSERT` BEFORE INSERT ON `name` FOR EACH ROW BEGIN
+SET NEW.name = capitalize(NEW.name);
+END
+```
+
+## Optimizing queries
+
+#### Query 1
+
+- Original cost:
+
+![image](https://user-images.githubusercontent.com/42556944/201542123-8003ec50-12f5-45af-b15d-ed19789ec4e2.png)
+
+- New cost (and query):
+
+![image](https://user-images.githubusercontent.com/42556944/201542076-dd4f770d-ec70-4167-9fca-c8b2abb1c441.png)
+
+
+#### Query 2
+
+- Original cost:
+
+![image](https://user-images.githubusercontent.com/42556944/201542183-f4c1eebe-e469-4ba8-a857-75f29c6e12ac.png)
+
+- New cost (and query):
+
+![image](https://user-images.githubusercontent.com/42556944/201542946-5a538936-7979-46d6-bfec-71de9e484ecc.png)
+
+#### Query 3
+
+- Original cost
+
+![image](https://user-images.githubusercontent.com/42556944/201542966-724ed632-140c-45df-b4f7-ba4884fc015b.png)
+
+- New cost (and query):
+
+![image](https://user-images.githubusercontent.com/42556944/201543019-bb53b703-1a2e-4f5a-9364-c892bc13643b.png)
+
+#### Query 4
+
+- Original cost
+
+![image](https://user-images.githubusercontent.com/42556944/201543065-a782a9c5-42fe-4ff2-9315-4669a6063c9a.png)
+
+- New cost (and query):
+
+![image](https://user-images.githubusercontent.com/42556944/201543075-77a2e17d-2098-4af4-b95c-e95023447e3c.png)
+
+
+#### Query 5
+
+- Original cost
+
+![image](https://user-images.githubusercontent.com/42556944/201543526-8d085005-c15f-4c58-bfde-631a6071835c.png)
+
+- New cost (and query):
+
+![image](https://user-images.githubusercontent.com/42556944/201543544-78af8e4d-9c7e-4f6a-b0f1-5e1735685b8c.png)
 
