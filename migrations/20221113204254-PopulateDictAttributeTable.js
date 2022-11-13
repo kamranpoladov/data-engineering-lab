@@ -15,20 +15,16 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db, cb) {
-  db.addIndex(
-    'title',
-    'idx_title_primary_title_original_title_release_year',
-    ['primary_title', 'original_title', 'release_year'],
+  db.runSql(
+    `
+    INSERT INTO dict_attribute (attribute) SELECT DISTINCT attributes FROM titleAkas WHERE attributes IS NOT NULL;
+  `,
     cb
   );
 };
 
-exports.down = function (db, cb) {
-  db.removeIndex(
-    'title',
-    'idx_title_primary_title_original_title_release_year',
-    cb
-  );
+exports.down = function (db) {
+  return null;
 };
 
 exports._meta = {

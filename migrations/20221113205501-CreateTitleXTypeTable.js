@@ -15,20 +15,22 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db, cb) {
-  db.addIndex(
-    'title',
-    'idx_title_primary_title_original_title_release_year',
-    ['primary_title', 'original_title', 'release_year'],
+  db.runSql(
+    `
+  CREATE TABLE title_x_type (
+    title_id INT NOT NULL,
+    type_id INT NOT NULL,
+    PRIMARY KEY (title_id, type_id),
+    FOREIGN KEY (title_id) REFERENCES title(id),
+    FOREIGN KEY (type_id) REFERENCES dict_type(id)
+  );
+  `,
     cb
   );
 };
 
 exports.down = function (db, cb) {
-  db.removeIndex(
-    'title',
-    'idx_title_primary_title_original_title_release_year',
-    cb
-  );
+  db.dropTable('title_x_type', cb);
 };
 
 exports._meta = {

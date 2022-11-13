@@ -15,20 +15,18 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db, cb) {
-  db.addIndex(
-    'title',
-    'idx_title_primary_title_original_title_release_year',
-    ['primary_title', 'original_title', 'release_year'],
+  db.runSql(
+    `
+  INSERT INTO title_x_attribute (title_id, attribute_id)
+  SELECT DISTINCT titleAkas.titleId as title_id, dict_attribute.id as attribute_id FROM titleAkas
+  INNER JOIN dict_attribute ON titleAkas.attributes = dict_attribute.attribute;
+  `,
     cb
   );
 };
 
-exports.down = function (db, cb) {
-  db.removeIndex(
-    'title',
-    'idx_title_primary_title_original_title_release_year',
-    cb
-  );
+exports.down = function (db) {
+  return null;
 };
 
 exports._meta = {
