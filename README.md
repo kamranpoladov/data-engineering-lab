@@ -188,6 +188,69 @@ exports.down = function (db, callback) {
 };
 ```
 
+The `name_x_title` table was created to store all the data what people participated in what titles. We also deleted all the irrelevant data from `titlePrincipals` using the following queries
+
+```
+CREATE TABLE name_x_title (
+  id INT NOT NULL AUTO_INCREMENT,
+  name_id INT NOT NULL,
+  title_id INT NOT NULL,
+  ordering INT NOT NULL,
+  characters VARCHAR(255),
+  PRIMARY KEY (id),
+  FOREIGN KEY (title_id) REFERENCES title(id),
+  FOREIGN KEY (name_id) REFERENCES name(id)
+);
+
+DELETE FROM titlePrincipals WHERE nconst NOT IN (SELECT id FROM name);
+
+DELETE FROM titlePrincipals WHERE tconst NOT IN (SELECT id FROM title);
+
+INSERT INTO name_x_title (name_id, title_id, ordering)
+SELECT nconst, tconst, ordering FROM titlePrincipals;
+
+// unwrap `characters`, credits to https://stackoverflow.com/a/56835547/8478087
+UPDATE name_x_title, titlePrincipals 
+SET name_x_title.characters = REPLACE(
+  REPLACE(
+     REPLACE(
+      titlePrincipals.characters
+      , '['
+      , ''
+    )
+    , ']'
+    , ''
+  )
+  , '"'
+  , ''
+)
+WHERE name_x_title.name_id = titlePrincipals.nconst AND name_x_title.title_id = titlePrincipals.tconst;
+```
+
+## Stored procedure
+
+This stored procedure gets movies with rating bigger than `average` for a given actor's id `name_id`
+
+```
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_top_movies_by_actor`(in name_id int, in average float)
+BEGIN
+    SELECT title.primary_title, title.release_year, title_x_duration.duration, title_ratings.average_rating FROM title
+    
+    LEFT JOIN title_ratings ON title_ratings.title_id = title.id
+    
+    LEFT JOIN name_x_title ON name_x_title.title_id = title.id
+    
+    LEFT JOIN title_x_duration ON title_x_duration.title_id = title.id
+    
+    WHERE title_ratings.average_rating >= average AND name_x_title.name_id = name_id
+    
+    GROUP BY title.id;
+END
+```
+
+For example, here are movies with Leonardo DiCaprio where rating is greater than or equal to 8
+
+![image](https://user-images.githubusercontent.com/42556944/201538045-974f4d42-57f4-4151-817c-208f77974f48.png)
 
 
 
