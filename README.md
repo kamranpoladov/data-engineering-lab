@@ -252,5 +252,31 @@ For example, here are movies with Leonardo DiCaprio where rating is greater than
 
 ![image](https://user-images.githubusercontent.com/42556944/201538045-974f4d42-57f4-4151-817c-208f77974f48.png)
 
+## View
 
+The following view aggregates data about all the names, such as full names, titles, birth and death years, professions
+
+```
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `name_summary` AS
+    SELECT 
+        `name`.`id` AS `ID`,
+        `name`.`name` AS `Full Name`,
+        `name`.`birth_year` AS `Birth Year`,
+        `name`.`death_year` AS `Death Year`,
+        `dict_profession`.`profession` AS `Profession`,
+        `title`.`id` AS `Title ID`,
+        `title`.`primary_title` AS `Title Name`
+    FROM
+        ((((`name`
+        JOIN `name_x_profession` ON ((`name_x_profession`.`name_id` = `name`.`id`)))
+        JOIN `dict_profession` ON ((`name_x_profession`.`profession_id` = `dict_profession`.`id`)))
+        JOIN `name_x_title` ON ((`name_x_title`.`name_id` = `name`.`id`)))
+        JOIN `title` ON ((`title`.`id` = `name_x_title`.`title_id`)))
+```
+
+![image](https://user-images.githubusercontent.com/42556944/201539076-9669bdaf-4ded-4c46-b396-e17c3463a9ce.png)
 
