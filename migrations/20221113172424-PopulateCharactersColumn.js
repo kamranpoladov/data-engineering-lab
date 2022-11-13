@@ -15,27 +15,26 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db, cb) {
-  // db.runSql(
-  //   `
-  // UPDATE name_x_title, titlePrincipals
-  // SET name_x_title.characters = REPLACE(
-  //   REPLACE(
-  //      REPLACE(
-  //       titlePrincipals.characters
-  //       , '['
-  //       , ''
-  //     )
-  //     , ']'
-  //     , ''
-  //   )
-  //   , '"'
-  //   , ''
-  // )
-  // WHERE name_x_title.name_id = titlePrincipals.nconst AND name_x_title.title_id = titlePrincipals.tconst;
-  // `,
-  //   cb
-  // );
-  return null;
+  db.runSql(
+    `
+  UPDATE name_x_title, titlePrincipals
+  SET name_x_title.characters = REPLACE(
+    REPLACE(
+       REPLACE(
+        titlePrincipals.characters
+        , '['
+        , ''
+      )
+      , ']'
+      , ''
+    )
+    , '"'
+    , ''
+  )
+  WHERE name_x_title.name_id = titlePrincipals.nconst AND name_x_title.title_id = titlePrincipals.tconst;
+  `,
+    cb
+  );
 };
 
 exports.down = function (db) {

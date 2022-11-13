@@ -25,7 +25,10 @@ exports.up = function (db, cb) {
         unique: true,
         notNull: true
       },
-      type: 'string'
+      type: {
+        type: 'string',
+        notNull: true
+      }
     },
     cb
   );
